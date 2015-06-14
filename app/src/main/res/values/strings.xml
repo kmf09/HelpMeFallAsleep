@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HelpMeFallAsleep</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_delete">delete</string>
+
+    <string-array name="descriptions">
+        <item>Jumping on a trampelone</item>
+        <item>Going to an AA meeting</item>
+        <item>Going to Disney World</item>
+        <item>Hugging a panda</item>
+        <item>Working out at the gym</item>
+        <item>Going swimming</item>
+        <item>Jamming out</item>
+        <item>Going on a trip</item>
+        <item>Flying in an airplane</item>
+        <item>Puppies</item>
+        <item>Kittens</item>
+    </string-array>
+
+</resources>
