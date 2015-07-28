@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void stop(View v) {
-
+        textToSpeech.stop();
     }
 
     @Override
