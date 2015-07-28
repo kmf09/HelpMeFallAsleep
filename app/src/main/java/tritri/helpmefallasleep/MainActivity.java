@@ -1,8 +1,7 @@
 package tritri.helpmefallasleep;
-
+import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.media.AudioManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -21,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     TextToSpeech textToSpeech;
     List<String> toSpeak;
