@@ -1,4 +1,5 @@
 package tritri.helpmefallasleep;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.media.AudioManager;
@@ -71,7 +72,13 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//                if (view.getDrawingCacheBackgroundColor() == Color.BLUE)
+//                {
+//                    view.setBackgroundColor(Color.TRANSPARENT);
+//                }
+//                view.setBackgroundColor(Color.BLUE);
                 Log.v("Long click", "You have long clicked this item");
+
 
                 ActionMode mActionMode = startActionMode(new ActionMode.Callback() {
                     @Override

@@ -57,7 +57,8 @@
         android:id="@+id/list"
         android:layout_below="@+id/addOption"
         android:layout_centerHorizontal="true"
-        android:longClickable="true" />
+        android:longClickable="true"
+        android:listSelector="@color/accent_material_light"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -66,6 +67,6 @@
         android:ems="10"
         android:id="@+id/timer"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
