@@ -83,6 +83,7 @@
         android:id="@+id/numberPickerButton"
         android:layout_above="@+id/addOption"
         android:layout_toRightOf="@+id/numberPicker"
-        android:layout_toEndOf="@+id/numberPicker" />
+        android:layout_toEndOf="@+id/numberPicker"
+        android:onClick="timeValuesSelected" />
 
 </RelativeLayout>

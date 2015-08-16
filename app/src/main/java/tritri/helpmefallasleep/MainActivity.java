@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         Button start = (Button) findViewById(R.id.startButton);
         editText = (EditText) findViewById(R.id.editText);
         listView = (ListView) findViewById(R.id.list);
+        Button numberPickerButton = (Button) findViewById(R.id.numberPickerButton);
         NumberPicker numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
         int base = 10;
         String[] numberPickerValues = new String[10];
@@ -83,11 +84,6 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                if (view.getDrawingCacheBackgroundColor() == Color.BLUE)
-//                {
-//                    view.setBackgroundColor(Color.TRANSPARENT);
-//                }
-//                view.setBackgroundColor(Color.BLUE);
                 Log.v("Long click", "You have long clicked this item");
 
 
