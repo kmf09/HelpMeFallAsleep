@@ -37,8 +37,7 @@
         android:layout_below="@+id/startButton"
         android:layout_centerHorizontal="true"
         android:hint="add option"
-        android:choiceMode="multipleChoice"
-        android:onClick="addToList" />
+        android:choiceMode="multipleChoice" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
