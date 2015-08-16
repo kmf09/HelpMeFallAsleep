@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
     ListView listView;
     ArrayAdapter<String> arrayAdapter;
+    int numberPickerValue = 10;
+    NumberPicker numberPicker;
+    String[] numberPickerValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.editText);
         listView = (ListView) findViewById(R.id.list);
         Button numberPickerButton = (Button) findViewById(R.id.numberPickerButton);
-        NumberPicker numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
+        numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
         int base = 10;
-        String[] numberPickerValues = new String[10];
+        numberPickerValues = new String[10];
         for(int i = 0; i < numberPickerValues.length; i++)
             numberPickerValues[i] = Integer.toString((i * 10) + base);
         numberPicker.setMaxValue(numberPickerValues.length-1);
@@ -162,12 +165,11 @@ public class MainActivity extends AppCompatActivity {
             try {
                 // for debugging purposes
                 //Toast.makeText(getApplicationContext(), description, Toast.LENGTH_SHORT).show();
-                textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);
+                //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);
                 // for API 21 : lollipop
-                //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
+                textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
 
-                //Thread.sleep(20000);
-                Thread.sleep(0);
+                Thread.sleep(numberPickerValue * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -176,6 +178,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void stop(View v) {
         textToSpeech.stop();
+    }
+
+    public void timeValuesSelected(View v) {
+        numberPickerValue = Integer.parseInt(numberPickerValues[numberPicker.getValue()]);
     }
 
     @Override
@@ -199,4 +205,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
