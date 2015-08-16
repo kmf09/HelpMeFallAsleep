@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button start = (Button) findViewById(R.id.startButton);
         editText = (EditText) findViewById(R.id.editText);
         listView = (ListView) findViewById(R.id.list);
         Button numberPickerButton = (Button) findViewById(R.id.numberPickerButton);
