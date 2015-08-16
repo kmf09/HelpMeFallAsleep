@@ -14,30 +14,31 @@
         android:layout_height="wrap_content"
         android:text="STOP"
         android:id="@+id/stopButton"
-        android:layout_above="@+id/editText"
-        android:layout_toRightOf="@+id/startButton"
-        android:layout_toEndOf="@+id/startButton"
-        android:onClick="stop"/>
+        android:onClick="stop"
+        android:layout_alignBaseline="@+id/startButton"
+        android:layout_alignBottom="@+id/startButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="start"
         android:id="@+id/startButton"
-        android:layout_marginTop="47dp"
         android:onClick="start"
         android:layout_below="@+id/timer"
-        android:layout_alignLeft="@+id/timer"
-        android:layout_alignStart="@+id/timer" />
+        android:layout_toLeftOf="@+id/stopButton"
+        android:layout_toStartOf="@+id/stopButton" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
-        android:layout_below="@+id/startButton"
-        android:layout_centerHorizontal="true"
         android:hint="add option"
-        android:choiceMode="multipleChoice" />
+        android:choiceMode="multipleChoice"
+        android:layout_below="@+id/stopButton"
+        android:layout_toRightOf="@+id/timer"
+        android:layout_toEndOf="@+id/timer" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -45,10 +46,9 @@
         android:layout_height="wrap_content"
         android:text="ok"
         android:id="@+id/addOption"
-        android:layout_alignBottom="@+id/editText"
-        android:layout_toRightOf="@+id/editText"
-        android:layout_toEndOf="@+id/editText"
-        android:onClick="addToList" />
+        android:onClick="addToList"
+        android:layout_below="@+id/editText"
+        android:layout_toRightOf="@+id/timer" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -67,5 +67,22 @@
         android:id="@+id/timer"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker"
+        android:layout_alignBottom="@+id/addOption"
+        android:layout_alignLeft="@+id/timer"
+        android:layout_alignStart="@+id/timer" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ok"
+        android:id="@+id/numberPickerButton"
+        android:layout_above="@+id/addOption"
+        android:layout_toRightOf="@+id/numberPicker"
+        android:layout_toEndOf="@+id/numberPicker" />
 
 </RelativeLayout>

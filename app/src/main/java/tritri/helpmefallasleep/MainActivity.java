@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.speech.tts.TextToSpeech;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.NumberPicker;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         Button start = (Button) findViewById(R.id.startButton);
         editText = (EditText) findViewById(R.id.editText);
         listView = (ListView) findViewById(R.id.list);
+        NumberPicker numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
+        int base = 10;
+        String[] numberPickerValues = new String[10];
+        for(int i = 0; i < numberPickerValues.length; i++)
+            numberPickerValues[i] = Integer.toString((i * 10) + base);
+        numberPicker.setMaxValue(numberPickerValues.length-1);
+        numberPicker.setMinValue(0);
+        numberPicker.setWrapSelectorWheel(false);
+        numberPicker.setDisplayedValues(numberPickerValues);
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
