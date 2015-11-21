@@ -19,5 +19,7 @@
         <item>Puppies</item>
         <item>Kittens</item>
     </string-array>
+    <string name="title_activity_activity_home">activity_home</string>
+    <string name="title_activity_activity_add_to_list">activity_add_to_list</string>
 
 </resources>
