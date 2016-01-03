@@ -33,35 +33,6 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:hint="add option"
-        android:choiceMode="multipleChoice"
-        android:layout_below="@+id/stopButton"
-        android:layout_toRightOf="@+id/timer"
-        android:layout_toEndOf="@+id/timer" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ok"
-        android:id="@+id/addOption"
-        android:onClick="addToList"
-        android:layout_below="@+id/editText"
-        android:layout_toRightOf="@+id/timer" />
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/list"
-        android:layout_below="@+id/addOption"
-        android:layout_centerHorizontal="true"
-        android:longClickable="true"
-        android:listSelector="@color/accent_material_light"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:inputType="time"
         android:ems="10"
         android:id="@+id/timer"
@@ -72,7 +43,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/numberPicker"
-        android:layout_alignBottom="@+id/addOption"
         android:layout_alignLeft="@+id/timer"
         android:layout_alignStart="@+id/timer" />
 
@@ -81,7 +51,6 @@
         android:layout_height="wrap_content"
         android:text="ok"
         android:id="@+id/numberPickerButton"
-        android:layout_above="@+id/addOption"
         android:layout_toRightOf="@+id/numberPicker"
         android:layout_toEndOf="@+id/numberPicker"
         android:onClick="timeValuesSelected" />

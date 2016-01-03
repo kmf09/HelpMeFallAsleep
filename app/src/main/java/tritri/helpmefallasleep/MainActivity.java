@@ -1,36 +1,23 @@
 package tritri.helpmefallasleep;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ActionMode;
+import android.speech.tts.TextToSpeech;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.speech.tts.TextToSpeech;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.NumberPicker;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     TextToSpeech textToSpeech;
-    List<String> toSpeak;
-    EditText editText;
-    ListView listView;
-    ArrayAdapter<String> arrayAdapter;
     int numberPickerValue = 10;
     NumberPicker numberPicker;
     String[] numberPickerValues;
@@ -39,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editText = (EditText) findViewById(R.id.editText);
-        listView = (ListView) findViewById(R.id.list);
+
+        // TODO: Move this to activity_add_to_list.java and then pass it through an intent, must be done through an array can't passs List<string>
         Button numberPickerButton = (Button) findViewById(R.id.numberPickerButton);
         numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
         int base = 10;
@@ -60,85 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        toSpeak = new ArrayList<>();
-        toSpeak.add("friends");
-        toSpeak.add("kittens");
-        toSpeak.add("walking on the beach");
-        toSpeak.add("riding a rollercoaster");
-        toSpeak.add("puppies");
-        toSpeak.add("watching the sunset");
-        toSpeak.add("taking off in a space shuttle");
-        toSpeak.add("pandas");
-        toSpeak.add("taylor swift");
-        toSpeak.add("jackie robinson");
-        toSpeak.add("shirley temple");
-        displayList();
-
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Log.v("Long click", "You have long clicked this item");
-
-
-                ActionMode mActionMode = startActionMode(new ActionMode.Callback() {
-                    @Override
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        mode.setTitle("Selected");
-
-                        MenuInflater inflater = mode.getMenuInflater();
-                        inflater.inflate(R.menu.menu_contextactionbar, menu);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_delete:
-                                Log.v("Delete clicked", "deleteClicked()");
-                                String toRemove = arrayAdapter.getItem(position);
-                                arrayAdapter.remove(toRemove);
-                                arrayAdapter.notifyDataSetChanged();
-                                return true;
-                            default:
-                                Log.v("Done clicked", "doneClicked()");
-                                return false;
-                        }
-                    }
-
-                    @Override
-                    public void onDestroyActionMode(ActionMode mode) {
-                        Log.v("Done clicked", "doneClicked()");
-                    }
-                });
-            }
-        });
-    }
-
-    public void addToList(View v)
-    {
-        String text = editText.getText().toString();
-        toSpeak.add(text);
-        editText.setText("");
-        displayList();
-    }
-
-    public void displayList() {
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, toSpeak);
-        listView.setAdapter(arrayAdapter);
     }
 
     public void turnOnSound() {
@@ -151,29 +59,24 @@ public class MainActivity extends AppCompatActivity {
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
     }
 
-    public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(MainActivity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
     public void start(View v) {
         turnOnSound();
-        Collections.shuffle(toSpeak);
-
-        for (String description : toSpeak)
-        {
-            try {
-                // for debugging purposes
-                //Toast.makeText(getApplicationContext(), description, Toast.LENGTH_SHORT).show();
-                //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);
-                // for API 21 : lollipop
-                textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
-
-                Thread.sleep(numberPickerValue * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        Collections.shuffle(toSpeak);
+//
+//        for (String description : toSpeak)
+//        {
+//            try {
+//                // for debugging purposes
+//                //Toast.makeText(getApplicationContext(), description, Toast.LENGTH_SHORT).show();
+//                //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);
+//                // for API 21 : lollipop
+//                textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
+//
+//                Thread.sleep(numberPickerValue * 1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public void stop(View v) {
