@@ -1,5 +1,6 @@
 package tritri.helpmefallasleep;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -13,11 +14,11 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
-
-    TextToSpeech textToSpeech;
+public class activity_set_timer extends AppCompatActivity {
     int numberPickerValue = 10;
     NumberPicker numberPicker;
     String[] numberPickerValues;
@@ -38,49 +39,7 @@ public class MainActivity extends AppCompatActivity {
         numberPicker.setMinValue(0);
         numberPicker.setWrapSelectorWheel(false);
         numberPicker.setDisplayedValues(numberPickerValues);
-        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR)
-                {
-                    textToSpeech.setLanguage(Locale.US);
-                }
-            }
-        });
-    }
 
-    public void turnOnSound() {
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int volume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-        // if the sound is already on, don't bother
-        if (volume != 0) {
-            volume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-        }
-        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-    }
-
-    public void start(View v) {
-        turnOnSound();
-//        Collections.shuffle(toSpeak);
-//
-//        for (String description : toSpeak)
-//        {
-//            try {
-//                // for debugging purposes
-//                //Toast.makeText(getApplicationContext(), description, Toast.LENGTH_SHORT).show();
-//                //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);
-//                // for API 21 : lollipop
-//                textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
-//
-//                Thread.sleep(numberPickerValue * 1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-    }
-
-    public void stop(View v) {
-        textToSpeech.stop();
     }
 
     public void timeValuesSelected(View v) {
@@ -108,6 +67,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }
