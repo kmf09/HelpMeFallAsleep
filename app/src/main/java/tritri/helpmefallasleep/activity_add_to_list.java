@@ -3,7 +3,6 @@ package tritri.helpmefallasleep;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -29,6 +29,7 @@ public class activity_add_to_list extends AppCompatActivity {
     List<String> toSpeak;
     ArrayAdapter<String> arrayAdapter;
     EditText editText;
+    Button okButton;
 
     @Override
     protected void onResume() {
@@ -46,7 +47,8 @@ public class activity_add_to_list extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_add_to_list);
         listView = (ListView) findViewById(R.id.listView);
-        editText = (EditText) findViewById(R.id.editText);
+        editText = (EditText) findViewById(R.id.addOption);
+        okButton = (Button) findViewById(R.id.addToListButton);
         toSpeak = new ArrayList<>();
         toSpeak.add("friends");
         toSpeak.add("kittens");
@@ -83,6 +85,9 @@ public class activity_add_to_list extends AppCompatActivity {
 
                         MenuInflater inflater = mode.getMenuInflater();
                         inflater.inflate(R.menu.menu_contextactionbar, menu);
+
+                        editText.setVisibility(View.GONE);
+                        okButton.setVisibility(View.GONE);
                         return true;
                     }
 
@@ -109,6 +114,13 @@ public class activity_add_to_list extends AppCompatActivity {
                     @Override
                     public void onDestroyActionMode(ActionMode mode) {
                         Log.v("Done clicked", "doneClicked()");
+                        editText.setVisibility(View.VISIBLE);
+                        okButton.setVisibility(View.VISIBLE);
+                        listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+                        //arrayAdapter.notifyDataSetChanged();
+                        listView.clearChoices();
+                        listView.requestLayout();
+                        arrayAdapter.notifyDataSetChanged();
                     }
                 });
             }
@@ -116,7 +128,7 @@ public class activity_add_to_list extends AppCompatActivity {
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(activity_set_timer.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -164,5 +176,6 @@ public class activity_add_to_list extends AppCompatActivity {
         Set<String> set = new HashSet<>();
         set.addAll(toSpeak);
         editor.putStringSet("wordsToSpeak", set);
+        editor.apply();
     }
 }

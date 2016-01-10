@@ -7,28 +7,8 @@
     android:id="@+id/TriTri"
     android:focusable="false"
     android:focusableInTouchMode="true"
-    android:clickable="true">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="STOP"
-        android:id="@+id/stopButton"
-        android:onClick="stop"
-        android:layout_alignBaseline="@+id/startButton"
-        android:layout_alignBottom="@+id/startButton"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="start"
-        android:id="@+id/startButton"
-        android:onClick="start"
-        android:layout_below="@+id/timer"
-        android:layout_toLeftOf="@+id/stopButton"
-        android:layout_toStartOf="@+id/stopButton" />
+    android:clickable="true"
+    android:background="@drawable/background">
 
     <EditText
         android:layout_width="wrap_content"
@@ -39,20 +19,22 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/numberPicker"
-        android:layout_alignLeft="@+id/timer"
-        android:layout_alignStart="@+id/timer" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ok"
         android:id="@+id/numberPickerButton"
-        android:layout_toRightOf="@+id/numberPicker"
-        android:layout_toEndOf="@+id/numberPicker"
-        android:onClick="timeValuesSelected" />
+        android:onClick="submit"
+        android:layout_alignTop="@+id/numberPicker"
+        android:layout_alignEnd="@+id/timer"
+        android:layout_marginTop="32dp"/>
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker"
+        android:layout_below="@+id/timer"
+        android:layout_toStartOf="@+id/numberPickerButton"
+        android:layout_marginTop="46dp" />
 
 </RelativeLayout>
