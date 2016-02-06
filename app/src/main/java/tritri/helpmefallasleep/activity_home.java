@@ -98,7 +98,7 @@ public class activity_home extends ActionBarActivity {
         {
             try {
                 // for debugging purposes
-                Toast.makeText(getApplicationContext(), description, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), description, Toast.LENGTH_SHORT).show();
                 textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);
                 // for API 21 : lollipop
                 //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));

@@ -19,7 +19,7 @@ public class activity_set_timer extends AppCompatActivity {
         setContentView(R.layout.activity_set_timer);
 
         // TODO: Move this to activity_add_to_list.java and then pass it through an intent, must be done through an array can't passs List<string>
-        Button numberPickerButton = (Button) findViewById(R.id.numberPickerButton);
+        //Button numberPickerButton = (Button) findViewById(R.id.numberPickerButton);
         numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
         numberPickerValues = new String[10];
         for(int i = 0; i < numberPickerValues.length; i++)
