@@ -32,7 +32,7 @@ public class activity_add_to_list extends AppCompatActivity {
     EditText editText;
     Button okButton;
     boolean isActionModeOpen;
-    List<Integer> toRemove;
+    List<String> toRemove;
 
     @Override
     protected void onResume() {
@@ -114,7 +114,7 @@ public class activity_add_to_list extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                toRemove.add(position);
+                toRemove.add(arrayAdapter.getItem(position));
 
                 if (!isActionModeOpen) {
                     startListActionMode();
@@ -153,9 +153,14 @@ public class activity_add_to_list extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_delete:
                         Log.v("Delete clicked", "deleteClicked()");
-                        for (int i = 0; i < toRemove.size(); i++) {
-                            arrayAdapter.remove(arrayAdapter.getItem(toRemove.get(i)));
+//                        for (int i = 0; i < toRemove.size(); i++) {
+//                            arrayAdapter.remove(arrayAdapter.getItem(toRemove.get(i)));
+//                        }
+
+                        for (String element : toRemove) {
+                            arrayAdapter.remove(element);
                         }
+
                         toRemove.clear();
                         listView.clearChoices();
                         arrayAdapter.notifyDataSetChanged();
