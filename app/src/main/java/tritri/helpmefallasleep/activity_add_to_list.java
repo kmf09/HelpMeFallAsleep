@@ -53,20 +53,17 @@ public class activity_add_to_list extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.addOption);
         okButton = (Button) findViewById(R.id.addToListButton);
         toRemove = new ArrayList<>();
-        toSpeak = new ArrayList<>();
-        toSpeak.add("friends");
-        toSpeak.add("kittens");
-        toSpeak.add("walking on the beach");
-        toSpeak.add("riding a rollercoaster");
-        toSpeak.add("puppies");
-        toSpeak.add("watching the sunset");
-        toSpeak.add("taking off in a space shuttle");
-        toSpeak.add("pandas");
-        toSpeak.add("taylor swift");
-        toSpeak.add("jackie robinson");
-        toSpeak.add("shirley temple");
         isActionModeOpen = false;
         displayList();
+
+        // TODO: Put toSpeak in a separate class
+
+        // get the list to speak
+        SharedPreferences sharedpreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        if (sharedpreferences.contains("wordsToSpeak"))
+        {
+            toSpeak = new ArrayList<>(sharedpreferences.getStringSet("wordsToSpeak", null));
+        }
 
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -76,40 +73,6 @@ public class activity_add_to_list extends AppCompatActivity {
                 }
             }
         });
-
-//        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-//
-//            @Override
-//            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-//
-//            }
-//
-//            @Override
-//            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//                MenuInflater inflater = mode.getMenuInflater();
-//                inflater.inflate(R.menu.menu_contextactionbar, menu);
-//                editText.setVisibility(View.GONE);
-//                okButton.setVisibility(View.GONE);
-//                displayList();
-//                isActionModeOpen = true;
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onDestroyActionMode(ActionMode mode) {
-//
-//            }
-//        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -153,9 +116,6 @@ public class activity_add_to_list extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_delete:
                         Log.v("Delete clicked", "deleteClicked()");
-//                        for (int i = 0; i < toRemove.size(); i++) {
-//                            arrayAdapter.remove(arrayAdapter.getItem(toRemove.get(i)));
-//                        }
 
                         for (String element : toRemove) {
                             arrayAdapter.remove(element);

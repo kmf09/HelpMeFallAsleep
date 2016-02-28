@@ -14,8 +14,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class activity_home extends ActionBarActivity {
     TextToSpeech textToSpeech;
@@ -32,13 +34,6 @@ public class activity_home extends ActionBarActivity {
             numberPickerValue = getIntent().getIntExtra("number_picker_value", 10);
         }
 
-        // get the list to speak
-        SharedPreferences sharedpreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        if (sharedpreferences.contains("wordsToSpeak"))
-        {
-            toSpeak = new ArrayList<>(sharedpreferences.getStringSet("wordsToSpeak", null));
-        }
-
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -48,6 +43,30 @@ public class activity_home extends ActionBarActivity {
                 }
             }
         });
+
+        // get the list to speak
+        SharedPreferences sharedpreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        if (sharedpreferences.contains("wordsToSpeak"))
+        {
+            toSpeak = new ArrayList<>(sharedpreferences.getStringSet("wordsToSpeak", null));
+        }
+
+        if (toSpeak == null)
+        {
+            // set initial list
+            toSpeak = new ArrayList<>();
+            toSpeak.add("friends");
+            toSpeak.add("kittens");
+            toSpeak.add("walking on the beach");
+            toSpeak.add("riding a rollercoaster");
+            toSpeak.add("puppies");
+            toSpeak.add("watching the sunset");
+            toSpeak.add("taking off in a space shuttle");
+            toSpeak.add("pandas");
+            toSpeak.add("taylor swift");
+            toSpeak.add("jackie robinson");
+            toSpeak.add("shirley temple");
+        }
     }
 
     @Override
@@ -112,5 +131,17 @@ public class activity_home extends ActionBarActivity {
 
     public void stop(View v) {
         textToSpeech.stop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Set<String> set = new HashSet<>();
+        set.addAll(toSpeak);
+        editor.putStringSet("wordsToSpeak", set);
+        editor.apply();
     }
 }
