@@ -39,12 +39,9 @@ public class activity_add_to_list extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Set<String> set = new HashSet<>();
-        itemsToSpeak = new ItemsToSpeak(this);
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.getStringSet("wordsToSpeak", set);
-        if (toSpeak == null)
-            toSpeak = new ArrayList<>(set);
+        if (itemsToSpeak == null)
+            itemsToSpeak = new ItemsToSpeak(this);
+        toSpeak = itemsToSpeak.GetItemsToSpeak(this);
     }
 
     @Override
@@ -56,16 +53,9 @@ public class activity_add_to_list extends AppCompatActivity {
         okButton = (Button) findViewById(R.id.addToListButton);
         toRemove = new ArrayList<>();
         isActionModeOpen = false;
-        displayList();
-
-        // TODO: Put toSpeak in a separate class
-
-        // get the list to speak
-        SharedPreferences sharedpreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        if (sharedpreferences.contains("wordsToSpeak"))
-        {
-            toSpeak = new ArrayList<>(sharedpreferences.getStringSet("wordsToSpeak", null));
-        }
+        // get items to speak
+        itemsToSpeak = new ItemsToSpeak(this);
+        toSpeak = itemsToSpeak.GetItemsToSpeak(this);
 
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -86,6 +76,8 @@ public class activity_add_to_list extends AppCompatActivity {
                 }
         }
         });
+
+        displayList();
     }
 
     private void startListActionMode() {
@@ -158,9 +150,6 @@ public class activity_add_to_list extends AppCompatActivity {
     }
 
     public void displayList() {
-//        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, toSpeak);
-//        listView.setAdapter(arrayAdapter);
-
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, toSpeak);
 
         listView.setAdapter(arrayAdapter);
