@@ -33,11 +33,13 @@ public class activity_add_to_list extends AppCompatActivity {
     Button okButton;
     boolean isActionModeOpen;
     List<String> toRemove;
+    ItemsToSpeak itemsToSpeak;
 
     @Override
     protected void onResume() {
         super.onResume();
         Set<String> set = new HashSet<>();
+        itemsToSpeak = new ItemsToSpeak(this);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.getStringSet("wordsToSpeak", set);
@@ -175,12 +177,6 @@ public class activity_add_to_list extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        SharedPreferences sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Set<String> set = new HashSet<>();
-        set.addAll(toSpeak);
-        editor.putStringSet("wordsToSpeak", set);
-        editor.apply();
+        itemsToSpeak.SetSharedPreferences(this, toSpeak);
     }
 }

@@ -23,11 +23,13 @@ public class activity_home extends ActionBarActivity {
     TextToSpeech textToSpeech;
     int numberPickerValue;
     List<String> toSpeak;
+    ItemsToSpeak itemsToSpeak;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_home);
+        itemsToSpeak = new ItemsToSpeak(this);
 
         // get timer value
         if (getIntent().hasExtra("number_picker_value")) {
@@ -44,29 +46,7 @@ public class activity_home extends ActionBarActivity {
             }
         });
 
-        // get the list to speak
-        SharedPreferences sharedpreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        if (sharedpreferences.contains("wordsToSpeak"))
-        {
-            toSpeak = new ArrayList<>(sharedpreferences.getStringSet("wordsToSpeak", null));
-        }
-
-        if (toSpeak == null)
-        {
-            // set initial list
-            toSpeak = new ArrayList<>();
-            toSpeak.add("friends");
-            toSpeak.add("kittens");
-            toSpeak.add("walking on the beach");
-            toSpeak.add("riding a rollercoaster");
-            toSpeak.add("puppies");
-            toSpeak.add("watching the sunset");
-            toSpeak.add("taking off in a space shuttle");
-            toSpeak.add("pandas");
-            toSpeak.add("taylor swift");
-            toSpeak.add("jackie robinson");
-            toSpeak.add("shirley temple");
-        }
+        toSpeak = itemsToSpeak.GetItemsToSpeak(this);
     }
 
     @Override
