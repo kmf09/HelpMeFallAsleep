@@ -1,8 +1,5 @@
 package tritri.helpmefallasleep;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,15 +29,15 @@ public class activity_add_to_list extends AppCompatActivity {
     Button okButton;
     boolean isActionModeOpen;
     List<String> toRemove;
-    ItemsToSpeak itemsToSpeak;
+    SharedPreferencesHelper sharedPreferencesHelper;
 
     @Override
     protected void onResume() {
         super.onResume();
         Set<String> set = new HashSet<>();
-        if (itemsToSpeak == null)
-            itemsToSpeak = new ItemsToSpeak(this);
-        toSpeak = itemsToSpeak.GetItemsToSpeak(this);
+        if (sharedPreferencesHelper == null)
+            sharedPreferencesHelper = new SharedPreferencesHelper(this);
+        toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);
     }
 
     @Override
@@ -54,8 +50,8 @@ public class activity_add_to_list extends AppCompatActivity {
         toRemove = new ArrayList<>();
         isActionModeOpen = false;
         // get items to speak
-        itemsToSpeak = new ItemsToSpeak(this);
-        toSpeak = itemsToSpeak.GetItemsToSpeak(this);
+        sharedPreferencesHelper = new SharedPreferencesHelper(this);
+        toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);
 
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -166,6 +162,6 @@ public class activity_add_to_list extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        itemsToSpeak.SetSharedPreferences(this, toSpeak);
+        sharedPreferencesHelper.SetSharedPreferences(this, toSpeak);
     }
 }

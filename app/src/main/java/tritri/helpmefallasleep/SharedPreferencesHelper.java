@@ -11,8 +11,8 @@ import java.util.Set;
 /**
  * Created by Katrina on 2/28/2016.
  */
-public class ItemsToSpeak {
-    public ItemsToSpeak(Context context) {
+public class SharedPreferencesHelper {
+    public SharedPreferencesHelper(Context context) {
         List<String> toSpeak = GetItemsToSpeak(context);
 
         if (toSpeak == null)

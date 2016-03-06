@@ -10,9 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -23,13 +21,13 @@ public class activity_home extends ActionBarActivity {
     TextToSpeech textToSpeech;
     int numberPickerValue;
     List<String> toSpeak;
-    ItemsToSpeak itemsToSpeak;
+    SharedPreferencesHelper sharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_home);
-        itemsToSpeak = new ItemsToSpeak(this);
+        sharedPreferencesHelper = new SharedPreferencesHelper(this);
 
         // get timer value
         if (getIntent().hasExtra("number_picker_value")) {
@@ -46,7 +44,7 @@ public class activity_home extends ActionBarActivity {
             }
         });
 
-        toSpeak = itemsToSpeak.GetItemsToSpeak(this);
+        toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);
     }
 
     @Override
