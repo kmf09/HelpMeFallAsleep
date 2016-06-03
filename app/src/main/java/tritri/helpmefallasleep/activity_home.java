@@ -1,10 +1,10 @@
 package tritri.helpmefallasleep;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
@@ -13,12 +13,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class activity_home extends ActionBarActivity {
+public class activity_home extends Activity {
     TextToSpeech textToSpeech;
     int timerValue;
     List<String> toSpeak;
@@ -125,6 +122,23 @@ public class activity_home extends ActionBarActivity {
         }
         Intent i = new Intent(this, AudioService.class);
         stopService(i);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // CAN DELETE THIS
+//        View decorView = getWindow().getDecorView();
+//        // Hide the status bar.
+//        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        decorView.setSystemUiVisibility(uiOptions);
+//        // Remember that you should never show the action bar if the
+//        // status bar is hidden, so hide that too if necessary.
+//        ActionBar actionBar = getActionBar();
+//        if (actionBar != null) {
+//            actionBar.hide();
+//        }
     }
 
     @Override
