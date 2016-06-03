@@ -1,9 +1,12 @@
 package tritri.helpmefallasleep;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,40 +14,59 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 public class activity_home extends ActionBarActivity {
     TextToSpeech textToSpeech;
-    int numberPickerValue;
+    int timerValue;
     List<String> toSpeak;
     SharedPreferencesHelper sharedPreferencesHelper;
+    AudioService audioService;
+    Boolean mBoundToService = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_home);
-        sharedPreferencesHelper = new SharedPreferencesHelper(this);
 
         // get timer value
         if (getIntent().hasExtra("number_picker_value")) {
-            numberPickerValue = getIntent().getIntExtra("number_picker_value", 10);
+            timerValue = getIntent().getIntExtra("number_picker_value", 10);
         }
+        // deafult
+        else {
+            timerValue = 1;
+        }
+    }
 
-        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR)
-                {
-                    textToSpeech.setLanguage(Locale.US);
-                }
-            }
-        });
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-        toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);
+        bindService(new Intent(this, AudioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mBoundToService)
+        {
+            unbindService(serviceConnection);
+            mBoundToService = false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+//        if (mBoundToService)
+//        {
+//            stopService(new Intent(this, AudioService.class));
+//        }
     }
 
     @Override
@@ -89,37 +111,46 @@ public class activity_home extends ActionBarActivity {
 
     public void start(View v) {
         turnOnSound();
-        Collections.shuffle(toSpeak);
-
-        for (String description : toSpeak)
-        {
-            try {
-                // for debugging purposes
-//                Toast.makeText(getApplicationContext(), description, Toast.LENGTH_SHORT).show();
-                textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);
-                // for API 21 : lollipop
-                //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
-
-                Thread.sleep(numberPickerValue * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        // use this to start and trigger a service
+        Intent i= new Intent(this, AudioService.class);
+        // potentially add data to the intent
+        i.putExtra("timer value", timerValue);
+        startService(i);
     }
 
     public void stop(View v) {
-        textToSpeech.stop();
+        if (mBoundToService) {
+            unbindService(serviceConnection);
+            mBoundToService = false;
+        }
+        Intent i = new Intent(this, AudioService.class);
+        stopService(i);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Set<String> set = new HashSet<>();
-        set.addAll(toSpeak);
-        editor.putStringSet("wordsToSpeak", set);
-        editor.apply();
+        //TODO: Implement this
+//        SharedPreferences sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        Set<String> set = new HashSet<>();
+//        set.addAll(toSpeak);
+//        editor.putStringSet("wordsToSpeak", set);
+//        editor.apply();
     }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            AudioService.AudioServiceBinder binder = (AudioService.AudioServiceBinder) service;
+            audioService = binder.getService();
+            mBoundToService = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBoundToService = false;
+        }
+    };
 }
