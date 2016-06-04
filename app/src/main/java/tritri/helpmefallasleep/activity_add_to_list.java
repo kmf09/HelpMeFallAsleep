@@ -133,8 +133,8 @@ public class activity_add_to_list extends AppCompatActivity {
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(activity_set_timer.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        //InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Timer.INPUT_METHOD_SERVICE);
+        //inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public void addToList(View v)

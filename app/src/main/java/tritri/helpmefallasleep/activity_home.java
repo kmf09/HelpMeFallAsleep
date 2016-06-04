@@ -8,11 +8,12 @@ import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Spinner;
+
 import java.util.List;
 
 public class activity_home extends Activity {
@@ -22,20 +23,15 @@ public class activity_home extends Activity {
     SharedPreferencesHelper sharedPreferencesHelper;
     AudioService audioService;
     Boolean mBoundToService = false;
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_home);
 
-        // get timer value
-        if (getIntent().hasExtra("number_picker_value")) {
-            timerValue = getIntent().getIntExtra("number_picker_value", 10);
-        }
-        // deafult
-        else {
-            timerValue = 1;
-        }
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        timer = new Timer(this, spinner);
     }
 
     @Override
@@ -92,10 +88,6 @@ public class activity_home extends Activity {
         this.startActivity(new Intent(this, activity_add_to_list.class));
     }
 
-    public void setTimer(View v) {
-        this.startActivity(new Intent(this, activity_set_timer.class));
-    }
-
     public void turnOnSound() {
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int volume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
@@ -111,7 +103,7 @@ public class activity_home extends Activity {
         // use this to start and trigger a service
         Intent i= new Intent(this, AudioService.class);
         // potentially add data to the intent
-        i.putExtra("timer value", timerValue);
+        i.putExtra("timer value", timer.selectedTime);
         startService(i);
     }
 
