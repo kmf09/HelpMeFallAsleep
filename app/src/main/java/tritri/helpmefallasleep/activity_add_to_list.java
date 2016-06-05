@@ -1,5 +1,6 @@
 package tritri.helpmefallasleep;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class activity_add_to_list extends AppCompatActivity {
+public class activity_add_to_list extends Activity {
 
     ListView listView;
     List<String> toSpeak;
@@ -34,7 +35,6 @@ public class activity_add_to_list extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Set<String> set = new HashSet<>();
         if (sharedPreferencesHelper == null)
             sharedPreferencesHelper = new SharedPreferencesHelper(this);
         toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);

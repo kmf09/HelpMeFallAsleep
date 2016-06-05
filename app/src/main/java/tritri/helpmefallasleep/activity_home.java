@@ -17,9 +17,6 @@ import android.widget.Spinner;
 import java.util.List;
 
 public class activity_home extends Activity {
-    TextToSpeech textToSpeech;
-    int timerValue;
-    List<String> toSpeak;
     SharedPreferencesHelper sharedPreferencesHelper;
     AudioService audioService;
     Boolean mBoundToService = false;
