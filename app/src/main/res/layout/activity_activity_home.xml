@@ -1,57 +1,106 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="tritri.helpmefallasleep.activity_home">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="wrap_content"
+    <!--Below activity widgets when the transparent layout is gone -->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start"
-        android:id="@+id/button"gi
-        android:layout_marginTop="182dp"
-        android:onClick="start"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/button3" />
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="tritri.helpmefallasleep.activity_home">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stop"
-        android:id="@+id/button2"
-        android:onClick="stop"
-        android:layout_alignTop="@+id/button"
-        android:layout_toEndOf="@+id/button3" />
+        <Button
+            android:id="@+id/instructionsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:onClick="instructions"
+            android:text="Instructions"
+            android:layout_marginBottom="50dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add items to list"
-        android:id="@+id/button3"
-        android:layout_marginTop="57dp"
-        android:onClick="addToList"
-        android:layout_below="@+id/spinner"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/instructionsButton"
+            android:layout_centerHorizontal="true"
+            android:text="Help Me Fall Asleep"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="40sp"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"/>
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_marginTop="49dp"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true" />
+        <LinearLayout
+            android:id="@+id/startStopbuttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:orientation="horizontal"
+            android:layout_marginBottom="50dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Help Me Fall Asleep"
-        android:id="@+id/textView2"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/button"
-        android:layout_marginTop="71dp" />
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="start"
+                android:layout_weight="1"
+                android:text="Start" />
 
-</RelativeLayout>
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="stop"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:text="Stop" />
+
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/startStopbuttons"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"/>
+
+        <Button
+            android:id="@+id/addToListButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinner"
+            android:layout_centerHorizontal="true"
+            android:onClick="addToList"
+            android:text="List of Words"/>
+
+    </RelativeLayout>
+
+    <!--Below is the transparent layout positioned at startup-->
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#88666666"
+    android:id="@+id/top_layout">
+
+    <ImageView
+    android:id="@+id/ivInstruction"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:paddingTop="25dp"
+    android:layout_marginRight="15dp"
+    android:clickable="false"
+    android:paddingLeft="20dip"
+    android:scaleType="center" />
+
+    </RelativeLayout>
+
+</FrameLayout>

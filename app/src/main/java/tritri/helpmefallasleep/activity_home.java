@@ -5,12 +5,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Spinner;
 
@@ -21,11 +23,23 @@ public class activity_home extends Activity {
     AudioService audioService;
     Boolean mBoundToService = false;
     Timer timer;
+    View topLevelLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_home);
+        topLevelLayout = findViewById(R.id.top_layout);
+        topLevelLayout.setVisibility(View.INVISIBLE);
+
+        topLevelLayout.setOnTouchListener(new View.OnTouchListener(){
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                topLevelLayout.setVisibility(View.INVISIBLE);
+                return true;
+            }
+        });
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         timer = new Timer(this, spinner);
@@ -116,18 +130,6 @@ public class activity_home extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // CAN DELETE THIS
-//        View decorView = getWindow().getDecorView();
-//        // Hide the status bar.
-//        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-//        decorView.setSystemUiVisibility(uiOptions);
-//        // Remember that you should never show the action bar if the
-//        // status bar is hidden, so hide that too if necessary.
-//        ActionBar actionBar = getActionBar();
-//        if (actionBar != null) {
-//            actionBar.hide();
-//        }
     }
 
     @Override
@@ -156,4 +158,8 @@ public class activity_home extends Activity {
             mBoundToService = false;
         }
     };
+
+    public void instructions(View v) {
+        topLevelLayout.setVisibility(View.VISIBLE);
+    }
 }
