@@ -14,7 +14,9 @@ public class activity_instructions extends Activity {
     }
 
     public void returnToMainApp(View v) {
-        this.startActivity(new Intent(this, activity_home.class));
+        Intent intent = new Intent(this, activity_home.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(intent);
     }
 
 }

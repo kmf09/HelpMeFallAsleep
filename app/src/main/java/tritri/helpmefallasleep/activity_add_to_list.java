@@ -142,8 +142,11 @@ public class activity_add_to_list extends Activity {
     public void addToList(View v)
     {
         String text = editText.getText().toString();
-        toSpeak.add(text);
-        editText.setText("");
+        if (text != null && !text.isEmpty())
+        {
+            toSpeak.add(text);
+            editText.setText("");
+        }
         displayList();
     }
 
