@@ -5,10 +5,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.IBinder;
-import android.speech.tts.TextToSpeech;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Spinner;
 
-import java.util.List;
-
 public class activity_home extends Activity {
-    SharedPreferencesHelper sharedPreferencesHelper;
     AudioService audioService;
     Boolean mBoundToService = false;
     Timer timer;
@@ -135,14 +130,6 @@ public class activity_home extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        //TODO: Implement this
-//        SharedPreferences sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        Set<String> set = new HashSet<>();
-//        set.addAll(toSpeak);
-//        editor.putStringSet("wordsToSpeak", set);
-//        editor.apply();
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -160,6 +147,9 @@ public class activity_home extends Activity {
     };
 
     public void instructions(View v) {
-        topLevelLayout.setVisibility(View.VISIBLE);
+        // This was for screen overlay, moving to separate activity
+        // topLevelLayout.setVisibility(View.VISIBLE);
+
+        this.startActivity(new Intent(this, activity_instructions.class));
     }
 }

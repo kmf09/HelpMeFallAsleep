@@ -64,22 +64,13 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Timer: "
-            android:layout_above="@+id/spinner"
-            android:layout_centerHorizontal="true"/>
-
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/startStopbuttons"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="50dp"
-            android:padding="20dp"
-            android:backgroundTint="@color/material_blue_grey_800"/>
+            android:layout_marginBottom="50dp"/>
 
         <Button
             android:id="@+id/addToListButton"

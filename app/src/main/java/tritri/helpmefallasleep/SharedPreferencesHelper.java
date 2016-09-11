@@ -20,16 +20,15 @@ public class SharedPreferencesHelper {
             // set initial list
             toSpeak = new ArrayList<>();
             toSpeak.add("friends");
-            toSpeak.add("kittens");
+            toSpeak.add("puppies");
             toSpeak.add("walking on the beach");
             toSpeak.add("riding a rollercoaster");
-            toSpeak.add("puppies");
+            toSpeak.add("jumping on the moon");
             toSpeak.add("watching the sunset");
             toSpeak.add("taking off in a space shuttle");
             toSpeak.add("pandas");
-            toSpeak.add("taylor swift");
-            toSpeak.add("jackie robinson");
-            toSpeak.add("shirley temple");
+            toSpeak.add("a childhood memory");
+            toSpeak.add("swimming");
             SetSharedPreferences(context, toSpeak);
         }
     }
