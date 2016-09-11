@@ -7,13 +7,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/CustomTheme">
-        <class
-            android:name=".activity_set_timer"
-            android:label="@string/app_name"></class>
-
         <activity
             android:name=".activity_home"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,11 +19,11 @@
         </activity>
         <activity
             android:name=".activity_add_to_list"
-            android:label="@string/title_activity_activity_add_to_list"></activity>
+            android:label="@string/title_activity_activity_add_to_list"/>
 
         <service android:name=".AudioService" />
 
-        <activity android:name=".activity_instructions"></activity>
+        <activity android:name=".activity_instructions"/>
     </application>
 
 </manifest>
