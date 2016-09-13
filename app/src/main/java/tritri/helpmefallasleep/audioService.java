@@ -38,7 +38,7 @@ public class AudioService extends Service {
                     isTextToSpeechInitialized = true;
                     if (!queue.isEmpty())
                     {
-                        speak(queue.poll());
+                        speak(queue.poll(), false);
                     }
                 }
             }
@@ -46,14 +46,16 @@ public class AudioService extends Service {
         toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);
     }
 
-    public void speak(Integer timerValue) {
+    public void speak(Integer timerValue, Boolean toShuffle) {
         if (isTextToSpeechInitialized) {
 
             if (timerValue == null) {
                 timerValue = 1; // default
             }
 
-            Collections.shuffle(toSpeak);
+            if (toShuffle) {
+                Collections.shuffle(toSpeak);
+            }
 
             SpeechRunnable thread1 = new SpeechRunnable(timerValue);
             Thread t1 = new Thread(thread1);
@@ -68,7 +70,7 @@ public class AudioService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //Activity has called startservice and I can do some work
         if (intent != null) {
-            speak(intent.getIntExtra("timer value", 1));
+            speak(intent.getIntExtra("timer value", 1), intent.getBooleanExtra("toShuffle", false));
         }
         return Service.START_STICKY;
     }

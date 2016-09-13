@@ -136,7 +136,7 @@ public class activity_add_to_list extends Activity {
 
     public void updateListItems(String item) {
         toSpeak.remove(item);
-        sharedPreferencesHelper.SetSharedPreferences(this, toSpeak);
+        sharedPreferencesHelper.SetSharedPreferencesToSpeak(this, toSpeak);
     }
 
     public void addToList(View v)
@@ -167,6 +167,6 @@ public class activity_add_to_list extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        sharedPreferencesHelper.SetSharedPreferences(this, toSpeak);
+        sharedPreferencesHelper.SetSharedPreferencesToSpeak(this, toSpeak);
     }
 }

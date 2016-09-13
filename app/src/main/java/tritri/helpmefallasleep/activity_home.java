@@ -10,34 +10,28 @@ import android.os.IBinder;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 
 public class activity_home extends Activity {
     AudioService audioService;
     Boolean mBoundToService = false;
+    Boolean toShuffle = false;
     Timer timer;
-    View topLevelLayout;
+    CheckBox shuffleCheckBox;
+    SharedPreferencesHelper sharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activity_home);
-        topLevelLayout = findViewById(R.id.top_layout);
-        topLevelLayout.setVisibility(View.INVISIBLE);
-
-        topLevelLayout.setOnTouchListener(new View.OnTouchListener(){
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                topLevelLayout.setVisibility(View.INVISIBLE);
-                return true;
-            }
-        });
-
+        setContentView(R.layout.activity_home);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         timer = new Timer(this, spinner);
+        sharedPreferencesHelper = new SharedPreferencesHelper(this);
+
+        shuffleCheckBox = (CheckBox) findViewById(R.id.checkBox);
+        toShuffle = shuffleCheckBox.isChecked();
     }
 
     @Override
@@ -45,6 +39,8 @@ public class activity_home extends Activity {
         super.onStart();
 
         bindService(new Intent(this, AudioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        toShuffle = sharedPreferencesHelper.GetItemsToShuffle(this);
+        shuffleCheckBox.setChecked(toShuffle);
     }
 
     @Override
@@ -56,16 +52,15 @@ public class activity_home extends Activity {
             unbindService(serviceConnection);
             mBoundToService = false;
         }
+
+        sharedPreferencesHelper.SetSharedPreferencesToShuffle(this, shuffleCheckBox);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-//        if (mBoundToService)
-//        {
-//            stopService(new Intent(this, AudioService.class));
-//        }
+        toShuffle = sharedPreferencesHelper.GetItemsToShuffle(this);
+        shuffleCheckBox.setChecked(toShuffle);
     }
 
     @Override
@@ -110,6 +105,7 @@ public class activity_home extends Activity {
         Intent i= new Intent(this, AudioService.class);
         // potentially add data to the intent
         i.putExtra("timer value", timer.selectedTime);
+        i.putExtra("toShuffle", shuffleCheckBox.isChecked());
         startService(i);
     }
 
@@ -120,16 +116,22 @@ public class activity_home extends Activity {
         }
         Intent i = new Intent(this, AudioService.class);
         stopService(i);
+        sharedPreferencesHelper.SetSharedPreferencesToShuffle(this, shuffleCheckBox);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (sharedPreferencesHelper == null)
+            sharedPreferencesHelper = new SharedPreferencesHelper(this);
+        toShuffle = sharedPreferencesHelper.GetItemsToShuffle(this);
+        shuffleCheckBox.setChecked(toShuffle);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        sharedPreferencesHelper.SetSharedPreferencesToShuffle(this, shuffleCheckBox);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
