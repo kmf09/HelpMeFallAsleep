@@ -59,8 +59,6 @@ public class activity_home extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        toShuffle = sharedPreferencesHelper.GetItemsToShuffle(this);
-        shuffleCheckBox.setChecked(toShuffle);
     }
 
     @Override
