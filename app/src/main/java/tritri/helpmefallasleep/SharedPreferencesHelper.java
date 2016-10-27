@@ -13,8 +13,17 @@ import java.util.Set;
  * Created by Katrina on 2/28/2016.
  */
 public class SharedPreferencesHelper {
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private static final String WORDS_TO_SPEAK = "wordsToSpeak";
+    private static final String TO_SHUFFLE = "toShuffle";
+    private static final String TIMER_VALUE = "timerValue";
+
     public SharedPreferencesHelper(Context context) {
-        List<String> toSpeak = GetItemsToSpeak(context);
+        List<String> toSpeak = GetItemsToSpeak();
+
+        mSharedPreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
 
         if (toSpeak == null)
         {
@@ -28,58 +37,49 @@ public class SharedPreferencesHelper {
             toSpeak.add("taking off in a space shuttle");
             toSpeak.add("a childhood memory");
             toSpeak.add("swimming");
-            SetSharedPreferencesToSpeak(context, toSpeak);
+            SetSharedPreferencesToSpeak(toSpeak);
         }
     }
 
-    public void SetSharedPreferencesToSpeak(Context context, List<String> toSpeak) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+    public void SetSharedPreferencesToSpeak(List<String> toSpeak) {
         Set<String> set = new HashSet<>();
         set.addAll(toSpeak);
-        editor.putStringSet("wordsToSpeak", set);
-        editor.apply();
+        mEditor.putStringSet(WORDS_TO_SPEAK, set);
+        mEditor.apply();
     }
 
-    public void SetSharedPreferencesToShuffle(Context context, CheckBox shuffleCheckBox) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("toShuffleBool", shuffleCheckBox.isChecked());
-        editor.apply();
+    public void SetSharedPreferencesToShuffle(CheckBox shuffleCheckBox) {
+        mEditor.putBoolean(TO_SHUFFLE, shuffleCheckBox.isChecked());
+        mEditor.apply();
     }
 
-    public void SetTimerValue(Context context, int position) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("timerValue", position);
-        editor.apply();
+    public void SetTimerPosition(int position) {
+        mEditor.putInt(TIMER_VALUE, position);
+        mEditor.apply();
     }
 
-    public List<String> GetItemsToSpeak(Context context) {
-        SharedPreferences sharedpreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        if (sharedpreferences.contains("wordsToSpeak"))
+    public List<String> GetItemsToSpeak() {
+        if (mSharedPreferences.contains(WORDS_TO_SPEAK))
         {
-            return new ArrayList<>(sharedpreferences.getStringSet("wordsToSpeak", null));
+            return new ArrayList<>(mSharedPreferences.getStringSet(WORDS_TO_SPEAK, null));
         }
 
         return null;
     }
 
-    public Boolean GetItemsToShuffle(Context context) {
-        SharedPreferences sharedpreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        if (sharedpreferences.contains("toShuffleBool"))
+    public Boolean GetItemsToShuffle() {
+        if (mSharedPreferences.contains(TO_SHUFFLE))
         {
-            return sharedpreferences.getBoolean("toShuffleBool", false);
+            return mSharedPreferences.getBoolean(TO_SHUFFLE, false);
         }
 
         return false;
     }
 
-    public int GetTimerValue(Context context) {
-        SharedPreferences sharedpreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        if (sharedpreferences.contains("timerValue"))
+    public int GetTimerPosition() {
+        if (mSharedPreferences.contains(TIMER_VALUE))
         {
-            return sharedpreferences.getInt("timerValue", 0);
+            return mSharedPreferences.getInt(TIMER_VALUE, 0);
         }
 
         return 0;

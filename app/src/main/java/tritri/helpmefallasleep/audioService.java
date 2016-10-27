@@ -6,7 +6,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -19,42 +18,42 @@ import java.util.Queue;
  */
 public class AudioService extends Service {
     // Binder given to clients
-    private final IBinder audioServiceBinder = new AudioServiceBinder();
-    TextToSpeech textToSpeech;
-    SharedPreferencesHelper sharedPreferencesHelper;
-    List<String> toSpeak;
-    Boolean isTextToSpeechInitialized = false;
-    Queue<Integer> queue = new LinkedList<>();
+    private final IBinder mAudioServiceBinder = new AudioServiceBinder();
+    private TextToSpeech textToSpeech;
+    private SharedPreferencesHelper mSharedPreferencesHelper;
+    private List<String> mToSpeak;
+    private Boolean mIsTextToSpeechInitialized = false;
+    private Queue<Integer> mQueue = new LinkedList<>();
 
     @Override
     public void onCreate() {
-        sharedPreferencesHelper = new SharedPreferencesHelper(this);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR)
                 {
                     textToSpeech.setLanguage(Locale.US);
-                    isTextToSpeechInitialized = true;
-                    if (!queue.isEmpty())
+                    mIsTextToSpeechInitialized = true;
+                    if (!mQueue.isEmpty())
                     {
-                        speak(queue.poll(), false);
+                        speak(mQueue.poll(), false);
                     }
                 }
             }
         });
-        toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);
+        mToSpeak = mSharedPreferencesHelper.GetItemsToSpeak();
     }
 
     public void speak(Integer timerValue, Boolean toShuffle) {
-        if (isTextToSpeechInitialized) {
+        if (mIsTextToSpeechInitialized) {
 
             if (timerValue == null) {
                 timerValue = 1; // default
             }
 
             if (toShuffle) {
-                Collections.shuffle(toSpeak);
+                Collections.shuffle(mToSpeak);
             }
 
             SpeechRunnable thread1 = new SpeechRunnable(timerValue);
@@ -62,7 +61,7 @@ public class AudioService extends Service {
             t1.start();
         }
         else {
-            queue.add(timerValue);
+            mQueue.add(timerValue);
         }
     }
 
@@ -78,7 +77,7 @@ public class AudioService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return audioServiceBinder;
+        return mAudioServiceBinder;
     }
 
     @Override
@@ -113,7 +112,7 @@ public class AudioService extends Service {
 
         @Override
         public void run() {
-            for (String description : toSpeak)
+            for (String description : mToSpeak)
             {
                 try {
                     textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);

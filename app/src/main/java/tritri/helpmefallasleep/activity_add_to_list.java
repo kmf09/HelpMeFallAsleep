@@ -33,7 +33,7 @@ public class activity_add_to_list extends Activity {
         super.onResume();
         if (sharedPreferencesHelper == null)
             sharedPreferencesHelper = new SharedPreferencesHelper(this);
-        toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);
+        toSpeak = sharedPreferencesHelper.GetItemsToSpeak();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class activity_add_to_list extends Activity {
         isActionModeOpen = false;
         // get items to speak
         sharedPreferencesHelper = new SharedPreferencesHelper(this);
-        toSpeak = sharedPreferencesHelper.GetItemsToSpeak(this);
+        toSpeak = sharedPreferencesHelper.GetItemsToSpeak();
 
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -136,7 +136,7 @@ public class activity_add_to_list extends Activity {
 
     public void updateListItems(String item) {
         toSpeak.remove(item);
-        sharedPreferencesHelper.SetSharedPreferencesToSpeak(this, toSpeak);
+        sharedPreferencesHelper.SetSharedPreferencesToSpeak(toSpeak);
     }
 
     public void addToList(View v)
@@ -167,6 +167,6 @@ public class activity_add_to_list extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        sharedPreferencesHelper.SetSharedPreferencesToSpeak(this, toSpeak);
+        sharedPreferencesHelper.SetSharedPreferencesToSpeak(toSpeak);
     }
 }

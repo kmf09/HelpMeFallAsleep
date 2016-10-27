@@ -15,24 +15,24 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 
 public class activity_home extends Activity {
-    AudioService audioService;
+    AudioService mAudioService;
     Boolean mBoundToService = false;
-    Boolean toShuffle = false;
-    Timer timer;
-    CheckBox shuffleCheckBox;
-    SharedPreferencesHelper sharedPreferencesHelper;
-    Spinner timerSpinner;
+    Boolean mToShuffle = false;
+    Timer mTimer;
+    CheckBox mShuffleCheckBox;
+    SharedPreferencesHelper mSharedPreferencesHelper;
+    Spinner mTimerSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        timerSpinner = (Spinner) findViewById(R.id.spinner);
-        timer = new Timer(this, timerSpinner);
-        sharedPreferencesHelper = new SharedPreferencesHelper(this);
+        mTimerSpinner = (Spinner) findViewById(R.id.spinner);
+        mTimer = new Timer(this, mTimerSpinner);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
 
-        shuffleCheckBox = (CheckBox) findViewById(R.id.checkBox);
-        toShuffle = shuffleCheckBox.isChecked();
+        mShuffleCheckBox = (CheckBox) findViewById(R.id.checkBox);
+        mToShuffle = mShuffleCheckBox.isChecked();
     }
 
     @Override
@@ -40,9 +40,9 @@ public class activity_home extends Activity {
         super.onStart();
 
         bindService(new Intent(this, AudioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        toShuffle = sharedPreferencesHelper.GetItemsToShuffle(this);
-        shuffleCheckBox.setChecked(toShuffle);
-        timerSpinner.setSelection(sharedPreferencesHelper.GetTimerValue(this));
+        mToShuffle = mSharedPreferencesHelper.GetItemsToShuffle();
+        mShuffleCheckBox.setChecked(mToShuffle);
+        mTimerSpinner.setSelection(mSharedPreferencesHelper.GetTimerPosition());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class activity_home extends Activity {
             mBoundToService = false;
         }
 
-        sharedPreferencesHelper.SetSharedPreferencesToShuffle(this, shuffleCheckBox);
+        mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
     }
 
     @Override
@@ -104,8 +104,8 @@ public class activity_home extends Activity {
         // use this to start and trigger a service
         Intent i= new Intent(this, AudioService.class);
         // potentially add data to the intent
-        i.putExtra("timer value", timer.selectedTime);
-        i.putExtra("toShuffle", shuffleCheckBox.isChecked());
+        i.putExtra("timer value", mTimer.mSelectedTime);
+        i.putExtra("toShuffle", mShuffleCheckBox.isChecked());
         startService(i);
     }
 
@@ -116,30 +116,30 @@ public class activity_home extends Activity {
         }
         Intent i = new Intent(this, AudioService.class);
         stopService(i);
-        sharedPreferencesHelper.SetSharedPreferencesToShuffle(this, shuffleCheckBox);
+        mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (sharedPreferencesHelper == null)
-            sharedPreferencesHelper = new SharedPreferencesHelper(this);
-        toShuffle = sharedPreferencesHelper.GetItemsToShuffle(this);
-        shuffleCheckBox.setChecked(toShuffle);
-        timerSpinner.setSelection(sharedPreferencesHelper.GetTimerValue(this));
+        if (mSharedPreferencesHelper == null)
+            mSharedPreferencesHelper = new SharedPreferencesHelper(this);
+        mToShuffle = mSharedPreferencesHelper.GetItemsToShuffle();
+        mShuffleCheckBox.setChecked(mToShuffle);
+        mTimerSpinner.setSelection(mSharedPreferencesHelper.GetTimerPosition());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sharedPreferencesHelper.SetSharedPreferencesToShuffle(this, shuffleCheckBox);
+        mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             AudioService.AudioServiceBinder binder = (AudioService.AudioServiceBinder) service;
-            audioService = binder.getService();
+            mAudioService = binder.getService();
             mBoundToService = true;
         }
 
