@@ -17,6 +17,8 @@ import java.util.ArrayList;
 public class Timer implements AdapterView.OnItemSelectedListener {
     private static int baseNumber = 10;
     public int selectedTime;
+    Context _context;
+    SharedPreferencesHelper sharedPreferencesHelper;
 
     protected Timer(Context context, Spinner timer) {
         if (timer != null) {
@@ -28,6 +30,8 @@ public class Timer implements AdapterView.OnItemSelectedListener {
             adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             timer.setAdapter(adapter_state);
             timer.setOnItemSelectedListener(this);
+            _context = context;
+            sharedPreferencesHelper = new SharedPreferencesHelper(_context);
         }
     }
 
@@ -35,6 +39,7 @@ public class Timer implements AdapterView.OnItemSelectedListener {
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // remove "sec"
         selectedTime = Integer.parseInt(parent.getItemAtPosition(position).toString().replace("sec", ""));
+        sharedPreferencesHelper.SetTimerValue(_context, position);
     }
 
     @Override
