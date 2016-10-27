@@ -21,13 +21,14 @@ public class activity_home extends Activity {
     Timer timer;
     CheckBox shuffleCheckBox;
     SharedPreferencesHelper sharedPreferencesHelper;
+    Spinner timerSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        timer = new Timer(this, spinner);
+        timerSpinner = (Spinner) findViewById(R.id.spinner);
+        timer = new Timer(this, timerSpinner);
         sharedPreferencesHelper = new SharedPreferencesHelper(this);
 
         shuffleCheckBox = (CheckBox) findViewById(R.id.checkBox);
@@ -41,6 +42,7 @@ public class activity_home extends Activity {
         bindService(new Intent(this, AudioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         toShuffle = sharedPreferencesHelper.GetItemsToShuffle(this);
         shuffleCheckBox.setChecked(toShuffle);
+        timerSpinner.setSelection(sharedPreferencesHelper.GetSelectedTime(this));
     }
 
     @Override
@@ -124,6 +126,7 @@ public class activity_home extends Activity {
             sharedPreferencesHelper = new SharedPreferencesHelper(this);
         toShuffle = sharedPreferencesHelper.GetItemsToShuffle(this);
         shuffleCheckBox.setChecked(toShuffle);
+        timerSpinner.setSelection(sharedPreferencesHelper.GetSelectedTime(this));
     }
 
     @Override

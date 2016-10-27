@@ -48,6 +48,13 @@ public class SharedPreferencesHelper {
         editor.apply();
     }
 
+    public void SetSelectedTime(Context context, int location) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("selectedTime", location);
+        editor.apply();
+    }
+
     public List<String> GetItemsToSpeak(Context context) {
         SharedPreferences sharedpreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
         if (sharedpreferences.contains("wordsToSpeak"))
@@ -66,5 +73,15 @@ public class SharedPreferencesHelper {
         }
 
         return false;
+    }
+
+    public int GetSelectedTime(Context context) {
+        SharedPreferences sharedpreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        if (sharedpreferences.contains("selectedTime"))
+        {
+            return sharedpreferences.getInt("selectedTime", 10);
+        }
+
+        return 10;
     }
 }
