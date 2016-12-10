@@ -91,7 +91,7 @@
     android:id="@+id/top_layout">
 
     <ImageView
-    android:id="@+id/ivInstruction"
+    android:id="@+id/Instruction"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentRight="true"

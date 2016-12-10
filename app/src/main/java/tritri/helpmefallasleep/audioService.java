@@ -17,113 +17,102 @@ import java.util.Queue;
  * Created by Katrina on 3/5/2016.
  */
 public class AudioService extends Service {
-    // Binder given to clients
-    private final IBinder mAudioServiceBinder = new AudioServiceBinder();
-    private TextToSpeech textToSpeech;
+    private TextToSpeech mTextToSpeech;
     private SharedPreferencesHelper mSharedPreferencesHelper;
-    private List<String> mToSpeak;
-    private Boolean mIsTextToSpeechInitialized = false;
     private Queue<Integer> mQueue = new LinkedList<>();
+    private AudioServiceListener mAudioServiceListener;
+    private SpeechAsyncTask mSpeechAsyncTask;
 
     @Override
     public void onCreate() {
         mSharedPreferencesHelper = new SharedPreferencesHelper(this);
-        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+        mTextToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status != TextToSpeech.ERROR)
-                {
-                    textToSpeech.setLanguage(Locale.US);
-                    mIsTextToSpeechInitialized = true;
-                    if (!mQueue.isEmpty())
-                    {
-                        speak(mQueue.poll(), false);
-                    }
+                if (status != TextToSpeech.ERROR) {
+                    mTextToSpeech.setLanguage(Locale.US);
                 }
             }
         });
-        mToSpeak = mSharedPreferencesHelper.GetItemsToSpeak();
+
+        if (!mQueue.isEmpty()) {
+            speak(mQueue.poll(), false);
+        }
     }
 
     public void speak(Integer timerValue, Boolean toShuffle) {
-        if (mIsTextToSpeechInitialized) {
-
-            if (timerValue == null) {
-                timerValue = 1; // default
-            }
-
-            if (toShuffle) {
-                Collections.shuffle(mToSpeak);
-            }
-
-            SpeechRunnable thread1 = new SpeechRunnable(timerValue);
-            Thread t1 = new Thread(thread1);
-            t1.start();
-        }
-        else {
+        if (mTextToSpeech != null) {
+            mSpeechAsyncTask = new SpeechAsyncTask(timerValue, mTextToSpeech, mAudioServiceListener, mSharedPreferencesHelper, toShuffle);
+            mSpeechAsyncTask.execute();
+        } else {
             mQueue.add(timerValue);
         }
     }
 
+    /**
+     * This method is called after OnCreate() in the service. These
+     * are called when StartService() is called from the main activity.
+     *
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return int
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //Activity has called startservice and I can do some work
         if (intent != null) {
             speak(intent.getIntExtra("timer value", 1), intent.getBooleanExtra("toShuffle", false));
         }
         return Service.START_STICKY;
     }
 
+    /**
+     * This is called when bindService is called from the main activity.
+     * It returns a binder to the service.
+     * @Intnet intent
+     * @return service binder to Android
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mAudioServiceBinder;
+        return new AudioServiceBinder();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        textToSpeech.stop();
         return true;
     }
 
     @Override
     public void onDestroy() {
-        textToSpeech.stop();
-        textToSpeech.shutdown();
+        if (mTextToSpeech != null) {
+            mTextToSpeech.stop();
+            mTextToSpeech.shutdown();
+        }
+        utilities.setIsRunning(mAudioServiceListener, false);
+        mAudioServiceListener = null;
         super.onDestroy();
     }
 
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
+    public boolean stopPlayback() {
+        mSpeechAsyncTask.cancel(true);
+        if (mSpeechAsyncTask.isCancelled()) {
+            return true;
+        }
+        return false;
+    }
+
+    public void registerListener(AudioServiceListener asl) {
+        mAudioServiceListener = asl;
+    }
+
+    public interface AudioServiceListener {
+        void isRunning(Boolean stoppedValue);
+    }
+
     public class AudioServiceBinder extends Binder {
         AudioService getService() {
             return AudioService.this;
-        }
-    }
-
-    private class SpeechRunnable implements Runnable {
-        Integer timerValue;
-
-        public SpeechRunnable(Integer timerValue) {
-            this.timerValue = timerValue;
-        }
-
-        @Override
-        public void run() {
-            for (String description : mToSpeak)
-            {
-                try {
-                    textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null);
-                    // for API 21 : lollipop
-                    //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
-
-                    Thread.sleep(timerValue * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }

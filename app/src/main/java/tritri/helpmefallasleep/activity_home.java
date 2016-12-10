@@ -11,36 +11,71 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-public class activity_home extends Activity {
-    AudioService mAudioService;
-    Boolean mBoundToService = false;
-    Boolean mToShuffle = false;
-    Timer mTimer;
-    CheckBox mShuffleCheckBox;
-    SharedPreferencesHelper mSharedPreferencesHelper;
-    Spinner mTimerSpinner;
+public class activity_home extends Activity implements AudioService.AudioServiceListener {
+    private AudioService mAudioService;
+    private Boolean mIsBoundToService = false;
+    private Boolean mToShuffle = false;
+    private Timer mTimer;
+    private CheckBox mShuffleCheckBox;
+    private SharedPreferencesHelper mSharedPreferencesHelper;
+    private Spinner mTimerSpinner;
+    private Button mStartButton, mStopButton;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        /**
+         * This is called from Android. It passes in the service binder
+         * that was created in the service.
+         *
+         * @param name
+         * @param service
+         */
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mAudioService = ((AudioService.AudioServiceBinder)service).getService();
+            mAudioService.registerListener(activity_home.this);
+            mIsBoundToService = true;
+        }
+
+        /** This doesn't happen unless the service crashes
+        */
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mIsBoundToService = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        mStartButton = (Button) findViewById(R.id.startButton);
+        mStopButton = (Button )findViewById(R.id.stopButton);
         mTimerSpinner = (Spinner) findViewById(R.id.spinner);
+        mShuffleCheckBox = (CheckBox) findViewById(R.id.checkBox);
+
         mTimer = new Timer(this, mTimerSpinner);
         mSharedPreferencesHelper = new SharedPreferencesHelper(this);
-
-        mShuffleCheckBox = (CheckBox) findViewById(R.id.checkBox);
         mToShuffle = mShuffleCheckBox.isChecked();
     }
 
+    /**
+     * This method calls bindService which obtains a connection
+     * to the service. This just makes a connection to the service,
+     * and starting the service will be called later. This calls
+     * onBind in the service.
+     *
+     * Also, the shuffle checkbox is updated based on the shared preferences.
+     * The time indicated on the spinner is also updated.
+     */
     @Override
     protected void onStart() {
         super.onStart();
 
-        bindService(new Intent(this, AudioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        mToShuffle = mSharedPreferencesHelper.GetItemsToShuffle();
+        bindService(new Intent(this, AudioService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+        mToShuffle = mSharedPreferencesHelper.AreItemsToShuffle();
         mShuffleCheckBox.setChecked(mToShuffle);
         mTimerSpinner.setSelection(mSharedPreferencesHelper.GetTimerPosition());
     }
@@ -49,10 +84,10 @@ public class activity_home extends Activity {
     protected void onStop() {
         super.onStop();
 
-        if (mBoundToService)
+        if (mIsBoundToService)
         {
-            unbindService(serviceConnection);
-            mBoundToService = false;
+            unbindService(mServiceConnection);
+            mIsBoundToService = false;
         }
 
         mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
@@ -60,7 +95,65 @@ public class activity_home extends Activity {
 
     @Override
     protected void onDestroy() {
+        mAudioService.stopPlayback();
         super.onDestroy();
+    }
+
+    public void stop(View v) {
+        // Disable both buttons until service sends a message saying playback stopped successfully
+        mStopButton.setEnabled(false);
+        if (mAudioService.stopPlayback()) {
+            mStopButton.setEnabled(true);
+            mStartButton.setEnabled(true);
+        }
+    }
+
+    public void addToList(View v) {
+        this.startActivity(new Intent(this, activity_add_to_list.class));
+    }
+
+    public void turnOnSound() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        // if the sound is already on, don't bother
+        if (volume != 0) {
+            // TO get current volume level
+            volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        }
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+    }
+
+    public void start(View v) {
+        turnOnSound();
+        // use this to start and trigger a service
+        Intent i= new Intent(this, AudioService.class);
+        i.putExtra("timer value", mTimer.mSelectedTime);
+        i.putExtra("toShuffle", mShuffleCheckBox.isChecked());
+        startService(i);
+        mIsBoundToService = true;
+        mStartButton.setEnabled(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSharedPreferencesHelper == null)
+            mSharedPreferencesHelper = new SharedPreferencesHelper(this);
+        mToShuffle = mSharedPreferencesHelper.AreItemsToShuffle();
+        mShuffleCheckBox.setChecked(mToShuffle);
+        mTimerSpinner.setSelection(mSharedPreferencesHelper.GetTimerPosition());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
+    }
+
+    @Override
+    public void isRunning(final Boolean stoppedValue) {
+        if (mStartButton != null && !stoppedValue)
+            mStartButton.setEnabled(true);
     }
 
     @Override
@@ -83,76 +176,5 @@ public class activity_home extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void addToList(View v) {
-        this.startActivity(new Intent(this, activity_add_to_list.class));
-    }
-
-    public void turnOnSound() {
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int volume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-        // if the sound is already on, don't bother
-        if (volume != 0) {
-            volume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-        }
-        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-    }
-
-    public void start(View v) {
-        turnOnSound();
-        // use this to start and trigger a service
-        Intent i= new Intent(this, AudioService.class);
-        // potentially add data to the intent
-        i.putExtra("timer value", mTimer.mSelectedTime);
-        i.putExtra("toShuffle", mShuffleCheckBox.isChecked());
-        startService(i);
-    }
-
-    public void stop(View v) {
-        if (mBoundToService) {
-            unbindService(serviceConnection);
-            mBoundToService = false;
-        }
-        Intent i = new Intent(this, AudioService.class);
-        stopService(i);
-        mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mSharedPreferencesHelper == null)
-            mSharedPreferencesHelper = new SharedPreferencesHelper(this);
-        mToShuffle = mSharedPreferencesHelper.GetItemsToShuffle();
-        mShuffleCheckBox.setChecked(mToShuffle);
-        mTimerSpinner.setSelection(mSharedPreferencesHelper.GetTimerPosition());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
-    }
-
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            AudioService.AudioServiceBinder binder = (AudioService.AudioServiceBinder) service;
-            mAudioService = binder.getService();
-            mBoundToService = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mBoundToService = false;
-        }
-    };
-
-    public void instructions(View v) {
-        // This was for screen overlay, moving to separate activity
-        // topLevelLayout.setVisibility(View.VISIBLE);
-
-        this.startActivity(new Intent(this, activity_instructions.class));
     }
 }

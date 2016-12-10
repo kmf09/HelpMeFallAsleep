@@ -20,10 +20,9 @@ public class SharedPreferencesHelper {
     private static final String TIMER_VALUE = "timerValue";
 
     public SharedPreferencesHelper(Context context) {
-        List<String> toSpeak = GetItemsToSpeak();
-
         mSharedPreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
+        List<String> toSpeak = GetItemsToSpeak();
 
         if (toSpeak == null)
         {
@@ -67,7 +66,7 @@ public class SharedPreferencesHelper {
         return null;
     }
 
-    public Boolean GetItemsToShuffle() {
+    public Boolean AreItemsToShuffle() {
         if (mSharedPreferences.contains(TO_SHUFFLE))
         {
             return mSharedPreferences.getBoolean(TO_SHUFFLE, false);

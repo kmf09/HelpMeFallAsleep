@@ -49,14 +49,14 @@ public class activity_add_to_list extends Activity {
         sharedPreferencesHelper = new SharedPreferencesHelper(this);
         toSpeak = sharedPreferencesHelper.GetItemsToSpeak();
 
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
+//        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//                    hideKeyboard(v);
+//                }
+//            }
+//        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -129,10 +129,10 @@ public class activity_add_to_list extends Activity {
         });
     }
 
-    public void hideKeyboard(View view) {
-        //InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Timer.INPUT_METHOD_SERVICE);
-        //inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+//    public void hideKeyboard(View view) {
+//        //InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Timer.INPUT_METHOD_SERVICE);
+//        //inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//    }
 
     public void updateListItems(String item) {
         toSpeak.remove(item);
