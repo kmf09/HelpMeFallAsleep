@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-public class activity_home extends Activity implements AudioService.AudioServiceListener {
+public class Activity_home extends Activity implements AudioService.AudioServiceListener {
     private AudioService mAudioService;
     private Boolean mIsBoundToService = false;
     private Boolean mToShuffle = false;
@@ -35,12 +35,12 @@ public class activity_home extends Activity implements AudioService.AudioService
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mAudioService = ((AudioService.AudioServiceBinder)service).getService();
-            mAudioService.registerListener(activity_home.this);
+            mAudioService.registerListener(Activity_home.this);
             mIsBoundToService = true;
+            setStartButtonState(mAudioService.isRunning());
         }
 
-        /** This doesn't happen unless the service crashes
-        */
+        /** This doesn't happen unless the service crashes*/
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mIsBoundToService = false;
@@ -88,6 +88,7 @@ public class activity_home extends Activity implements AudioService.AudioService
         {
             unbindService(mServiceConnection);
             mIsBoundToService = false;
+            mAudioService.unRegisterListener();
         }
 
         mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
@@ -109,7 +110,11 @@ public class activity_home extends Activity implements AudioService.AudioService
     }
 
     public void addToList(View v) {
-        this.startActivity(new Intent(this, activity_add_to_list.class));
+        this.startActivity(new Intent(this, ActivityAddToList.class));
+    }
+
+    public void instructions (View v) {
+        this.startActivity(new Intent(this, ActivityInstructions.class));
     }
 
     public void turnOnSound() {
@@ -151,9 +156,8 @@ public class activity_home extends Activity implements AudioService.AudioService
     }
 
     @Override
-    public void isRunning(final Boolean stoppedValue) {
-        if (mStartButton != null && !stoppedValue)
-            mStartButton.setEnabled(true);
+    public void serviceFinishedCallback(final Boolean isRunning) {
+        setStartButtonState(isRunning);
     }
 
     @Override
@@ -176,5 +180,10 @@ public class activity_home extends Activity implements AudioService.AudioService
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setStartButtonState(Boolean isServiceRunning) {
+        if (mStartButton != null)
+            mStartButton.setEnabled(!isServiceRunning);
     }
 }

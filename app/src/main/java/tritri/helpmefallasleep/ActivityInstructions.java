@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class Activity_instructions extends Activity {
+public class ActivityInstructions extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,8 +15,7 @@ public class Activity_instructions extends Activity {
 
     public void returnToMainApp(View v) {
         Intent intent = new Intent(this, Activity_home.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivity(intent);
     }
-
 }

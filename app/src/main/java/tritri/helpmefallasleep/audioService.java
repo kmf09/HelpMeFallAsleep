@@ -2,6 +2,7 @@ package tritri.helpmefallasleep;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
@@ -18,14 +19,11 @@ import java.util.Queue;
  */
 public class AudioService extends Service {
     private TextToSpeech mTextToSpeech;
-    private SharedPreferencesHelper mSharedPreferencesHelper;
-    private Queue<Integer> mQueue = new LinkedList<>();
     private AudioServiceListener mAudioServiceListener;
     private SpeechAsyncTask mSpeechAsyncTask;
 
     @Override
     public void onCreate() {
-        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
         mTextToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -34,18 +32,12 @@ public class AudioService extends Service {
                 }
             }
         });
-
-        if (!mQueue.isEmpty()) {
-            speak(mQueue.poll(), false);
-        }
     }
 
     public void speak(Integer timerValue, Boolean toShuffle) {
         if (mTextToSpeech != null) {
-            mSpeechAsyncTask = new SpeechAsyncTask(timerValue, mTextToSpeech, mAudioServiceListener, mSharedPreferencesHelper, toShuffle);
+            mSpeechAsyncTask = new SpeechAsyncTask(timerValue, toShuffle);
             mSpeechAsyncTask.execute();
-        } else {
-            mQueue.add(timerValue);
         }
     }
 
@@ -89,25 +81,30 @@ public class AudioService extends Service {
             mTextToSpeech.stop();
             mTextToSpeech.shutdown();
         }
-        utilities.setIsRunning(mAudioServiceListener, false);
+        Utilities.setIsRunning(mAudioServiceListener, false);
         mAudioServiceListener = null;
         super.onDestroy();
     }
 
     public boolean stopPlayback() {
         mSpeechAsyncTask.cancel(true);
-        if (mSpeechAsyncTask.isCancelled()) {
-            return true;
-        }
-        return false;
+        return mSpeechAsyncTask.isCancelled();
+    }
+
+    public Boolean isRunning() {
+        return mSpeechAsyncTask != null && mSpeechAsyncTask.getStatus() == AsyncTask.Status.RUNNING;
     }
 
     public void registerListener(AudioServiceListener asl) {
         mAudioServiceListener = asl;
     }
 
+    public void unRegisterListener() {
+        mAudioServiceListener = null;
+    }
+
     public interface AudioServiceListener {
-        void isRunning(Boolean stoppedValue);
+        void serviceFinishedCallback(Boolean stoppedValue);
     }
 
     public class AudioServiceBinder extends Binder {
@@ -115,4 +112,59 @@ public class AudioService extends Service {
             return AudioService.this;
         }
     }
+
+    private class SpeechAsyncTask extends AsyncTask<String, Void, Void> {
+        private Integer mTimerValue;
+        private List<String> mToSpeak;
+
+        public SpeechAsyncTask(Integer timerValue,  boolean toShuffle) {
+            SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(getApplicationContext());
+            mTimerValue = setTimerValue(timerValue);
+            mToSpeak = sharedPreferencesHelper.GetItemsToSpeak();
+
+            if (toShuffle) {
+                Collections.shuffle(mToSpeak);
+            }
+        }
+
+        private Integer setTimerValue(Integer timerValue) {
+            if (timerValue == null) {
+                return 10; // default
+            }
+            return timerValue;
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            for (String description : mToSpeak) {
+                try {
+                    if (isCancelled())
+                        break;
+
+                    mTextToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
+                    // for API 21 : lollipop
+                    //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
+
+                    Thread.sleep(mTimerValue * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Utilities.setIsRunning(mAudioServiceListener, false);
+        }
+
+        @Override
+        protected void onCancelled() {
+            Utilities.setIsRunning(mAudioServiceListener, false);
+        }
+    }
 }
+
