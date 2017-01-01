@@ -139,16 +139,18 @@ public class AudioService extends Service {
 
         @Override
         protected Void doInBackground(String... strings) {
-            for (String description : mToSpeak) {
+            for (int i = 0; i < mToSpeak.size(); i++) {
+            //for (String description : mToSpeak) {
                 try {
                     if (isCancelled())
                         break;
 
-                    mTextToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
+                    mTextToSpeech.speak(mToSpeak.get(i), TextToSpeech.QUEUE_ADD, null, Integer.toString(mToSpeak.get(i).hashCode()));
                     // for API 21 : lollipop
                     //textToSpeech.speak(description, TextToSpeech.QUEUE_ADD, null, Integer.toString(description.hashCode()));
 
-                    Thread.sleep(mTimerValue * 1000);
+                    if (i != mToSpeak.size()-1)
+                        Thread.sleep(mTimerValue * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
