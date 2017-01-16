@@ -13,7 +13,8 @@
         android:hint="add option"
         android:choiceMode="multipleChoice"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/addToListButton" />
+        android:layout_toStartOf="@+id/addToListButton"
+        android:maxLines = "1"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"

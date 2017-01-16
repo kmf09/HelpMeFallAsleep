@@ -140,7 +140,6 @@ public class AudioService extends Service {
         @Override
         protected Void doInBackground(String... strings) {
             for (int i = 0; i < mToSpeak.size(); i++) {
-            //for (String description : mToSpeak) {
                 try {
                     if (isCancelled())
                         break;
