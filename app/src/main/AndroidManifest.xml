@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/trans528"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/CustomTheme">
         <activity
@@ -13,17 +13,17 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ActivityAddToList"
-            android:label="@string/title_activity_activity_add_to_list"/>
-
+            android:label="@string/title_activity_activity_add_to_list"
+            android:screenOrientation="portrait"/>
         <service android:name=".AudioService" />
-
-        <activity android:name=".ActivityInstructions"/>
+        <activity
+            android:name=".ActivityInstructions"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

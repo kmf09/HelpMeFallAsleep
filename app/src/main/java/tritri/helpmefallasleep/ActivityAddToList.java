@@ -128,11 +128,6 @@ public class ActivityAddToList extends Activity {
         });
     }
 
-//    public void hideKeyboard(View view) {
-//        //InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Timer.INPUT_METHOD_SERVICE);
-//        //inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//    }
-
     public void updateListItems(String item) {
         mToSpeak.remove(item);
         mSharedPreferencesHelper.SetSharedPreferencesToSpeak(mToSpeak);
@@ -141,7 +136,7 @@ public class ActivityAddToList extends Activity {
     public void addToList(View v)
     {
         String text = mEditText.getText().toString();
-        if (text != null && !text.isEmpty())
+        if (text != null && !text.isEmpty() && !text.equals("\n"))
         {
             mToSpeak.add(text);
             mEditText.setText("");

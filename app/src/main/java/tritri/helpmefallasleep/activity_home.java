@@ -94,9 +94,12 @@ public class Activity_home extends Activity implements AudioService.AudioService
         mSharedPreferencesHelper.SetSharedPreferencesToShuffle(mShuffleCheckBox);
     }
 
+    //TODO: Add audio notification and remove this code since back button and swiping away goes here
     @Override
     protected void onDestroy() {
-        mAudioService.stopPlayback();
+        if (mAudioService != null) {
+            mAudioService.stopPlayback();
+        }
         super.onDestroy();
     }
 
