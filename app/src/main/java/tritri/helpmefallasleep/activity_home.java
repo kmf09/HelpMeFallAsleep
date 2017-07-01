@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -55,6 +56,8 @@ public class Activity_home extends Activity implements AudioService.AudioService
         mStopButton = (Button )findViewById(R.id.stopButton);
         mTimerSpinner = (Spinner) findViewById(R.id.spinner);
         mShuffleCheckBox = (CheckBox) findViewById(R.id.checkBox);
+
+
 
         mTimer = new Timer(this, mTimerSpinner);
         mSharedPreferencesHelper = new SharedPreferencesHelper(this);

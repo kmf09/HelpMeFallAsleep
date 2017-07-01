@@ -5,6 +5,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+
 public class Timer implements AdapterView.OnItemSelectedListener {
     private static int mBaseNumber = 10;
     private SharedPreferencesHelper mSharedPreferencesHelper;
@@ -17,7 +19,7 @@ public class Timer implements AdapterView.OnItemSelectedListener {
                 numberPickerValues[i] = Integer.toString((i * 10) + mBaseNumber) + "sec";
             ArrayAdapter<String> adapter_state = new ArrayAdapter<>(context,
                     android.R.layout.simple_spinner_item, numberPickerValues);
-            adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapter_state.setDropDownViewResource(R.layout.custom_spinner);
             timer.setAdapter(adapter_state);
             timer.setOnItemSelectedListener(this);
             mSharedPreferencesHelper = new SharedPreferencesHelper(context);
