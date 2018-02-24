@@ -8,12 +8,12 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "tritri.helpmefallasleep"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 2
+        versionCode 3
         versionName "1.1"
         signingConfig signingConfigs.config
     }

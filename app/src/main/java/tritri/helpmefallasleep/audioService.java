@@ -87,6 +87,8 @@ public class AudioService extends Service {
     }
 
     public boolean stopPlayback() {
+        if (mSpeechAsyncTask == null)
+            return true;
         mSpeechAsyncTask.cancel(true);
         return mSpeechAsyncTask.isCancelled();
     }
